@@ -38,16 +38,19 @@ DEFAULT_CONFIG = {
     "config": {
         "enable": False,
         "permission": {
+            "default": 2,
             "main": 1,
             "help": 0,
             "servers": 0,
             "s": 2,
+            "s_info": 2,
             "start": 2,
             "stop": 2,
             "kill": 2,
             "restart": 2,
             "command": 2,
-            "mcdr": 2
+            "mcdr": 2,
+            "reload": 2
         }
     },
     "servers": {
@@ -205,7 +208,16 @@ def reply(src, msg):
     else:
         print(msg)
 
-# 命令回调
+# ========== 权限辅助函数 ==========
+def need(perm_name: str):
+    """动态权限检查：每次执行时重新读取配置中的权限级别"""
+    def check(src):
+        perm_cfg = config.get('config', {}).get('permission', {})
+        level = perm_cfg.get(perm_name, perm_cfg.get('default', 2))
+        return src.has_permission(level)
+    return check
+
+# ========== 命令回调 ==========
 def cmd_main(src, ctx):
     src.reply('§6=== 欢迎使用 MCDR-Server-Pivot ===')
     src.reply(f'§b名称: §r{PLUGIN_METADATA["name"]}')
@@ -325,6 +337,16 @@ def cmd_mcdr(src, ctx):
     src.reply(f'正在启动 {key}进程...')
     start_server(key, src)
 
+def cmd_reload(src, ctx):
+    """重新加载配置文件"""
+    try:
+        config_load()
+        src.reply('§a配置文件已重新加载，新配置已生效。')
+        perm_cfg = config.get('config', {}).get('permission', {})
+        src.reply(f'§7当前默认权限: {perm_cfg.get("default", 2)}')
+    except Exception as e:
+        src.reply(f'§c重载失败: {e}')
+
 # ========== 插件入口 ==========
 def on_load(server: PluginServerInterface, old):
     global mcdr_server
@@ -332,11 +354,6 @@ def on_load(server: PluginServerInterface, old):
     config_load()
     autostart_servers(server)
     server.register_help_message('!!msp', 'MCDR-Server-Pivot 服务器枢纽')
-
-    # 辅助函数：返回一个检查指定命令权限的 lambda
-    def need(perm_name: str):
-        level = get_permission_level(perm_name)
-        return lambda src: src.has_permission(level)
 
     server.register_command(
         Literal('!!msp')
@@ -351,6 +368,11 @@ def on_load(server: PluginServerInterface, old):
             Literal('servers')
             .requires(need('servers'))
             .runs(cmd_servers)
+        )
+        .then(
+            Literal('reload')
+            .requires(need('reload'))
+            .runs(cmd_reload)
         )
         .then(
             Literal('s')
