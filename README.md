@@ -7,8 +7,8 @@
 事实上，我在插件中使用了很多易于理解的设计，希望即使初次使用也能摸索明白
 
 ### 我需要感谢：
-1. @EMUnion   https://github.com/EMUnion   设计的MirrorServerReforged插件，我用其源代码进行学习后重新写了一次，可能其中会有少部分借鉴，恳请作者理解
-2. @tanhHeng  https://github.com/tanhHeng  设计的MirrorMcsmcdR插件，我通过使用他的插件获取了很多改进这个插件的灵感
+1. @EMUnion   https://github.com/EMUnion   设计的MirrorServerReforged插件    https://github.com/EMUnion/MirrorServerReforged    ，我用其源代码进行学习后重新写了一次，可能其中会有少部分借鉴，恳请作者理解
+2. @tanhHeng  https://github.com/tanhHeng  设计的MirrorMcsmcdR插件    https://github.com/LazyAlienServer/MirrorMcsmcdR    ，我通过使用他的插件获取了很多改进这个插件的灵感
 3. 还有Deepseek，我并没有很浓厚的python基础和MCDR插件开发基础，是Deepseek指导我一步步把这个插件写完并给予了很多先进的建议，事实上这个插件有90%是交给Deepseek生成的，我只是做了一个思路提供，整合，修理bug的过程
 
 感谢你们！
